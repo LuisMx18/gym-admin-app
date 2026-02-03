@@ -3,13 +3,13 @@ import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { TextInput, Button, SegmentedButtons, Text } from 'react-native-paper';
 import { useActiveBranch } from '../context/BranchContext';
 import { addClient } from '../services/clientService';
-import { addMonths, format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
 const MEMBERSHIP_TYPES = [
-  { value: 'mensual', label: 'Mensual', months: 1 },
-  { value: 'trimestral', label: 'Trimestral', months: 3 },
-  { value: 'semestral', label: 'Semestral', months: 6 },
-  { value: 'anual', label: 'Anual', months: 12 },
+  { value: 'diaria', label: 'Día', days: 1 },
+  { value: 'semanal', label: 'Semana', days: 7 },
+  { value: 'quincenal', label: 'Quincena', days: 15 },
+  { value: 'mensual', label: 'Mes', days: 30 },
 ];
 
 export default function AddClientScreen({ navigation }) {
@@ -19,7 +19,7 @@ export default function AddClientScreen({ navigation }) {
     name: '',
     phone: '',
     email: '',
-    membershipType: 'mensual',
+    membershipType: 'diaria',
   });
 
   const handleSubmit = async () => {
@@ -29,7 +29,8 @@ export default function AddClientScreen({ navigation }) {
     }
 
     const selectedPlan = MEMBERSHIP_TYPES.find(t => t.value === formData.membershipType);
-    const membershipEnd = addMonths(new Date(), selectedPlan.months);
+    const membershipEnd = addDays(new Date(), selectedPlan.days);
+    const price = activeBranch.prices[formData.membershipType];
 
     setLoading(true);
     const result = await addClient(
@@ -40,6 +41,7 @@ export default function AddClientScreen({ navigation }) {
         membershipType: formData.membershipType,
         membershipStart: format(new Date(), 'yyyy-MM-dd'),
         membershipEnd: format(membershipEnd, 'yyyy-MM-dd'),
+        price: price,
       },
       activeBranch.id
     );
@@ -99,6 +101,15 @@ export default function AddClientScreen({ navigation }) {
           disabled={loading}
         />
 
+        <View style={styles.priceCard}>
+          <Text variant="titleLarge" style={styles.priceText}>
+            ${activeBranch.prices[formData.membershipType]}
+          </Text>
+          <Text variant="bodyMedium" style={styles.priceLabel}>
+            Precio en {activeBranch.name}
+          </Text>
+        </View>
+
         <Button
           mode="contained"
           onPress={handleSubmit}
@@ -129,7 +140,22 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   segmented: {
-    marginBottom: 24,
+    marginBottom: 16,
+  },
+  priceCard: {
+    backgroundColor: '#e3f2fd',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  priceText: {
+    fontWeight: 'bold',
+    color: '#1976d2',
+  },
+  priceLabel: {
+    color: '#666',
+    marginTop: 4,
   },
   button: {
     marginTop: 8,

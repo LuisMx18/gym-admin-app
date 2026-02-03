@@ -88,10 +88,11 @@ npm run web
   name: string,
   phone: string,
   email: string,
-  membershipType: 'mensual' | 'trimestral' | 'semestral' | 'anual',
+  membershipType: 'diaria' | 'semanal' | 'quincenal' | 'mensual',
   membershipStart: string (YYYY-MM-DD),
   membershipEnd: string (YYYY-MM-DD),
-  branchId: 'sucursal1' | 'sucursal2',
+  price: number,
+  branchId: 'h7-life-fit' | 'balanx-h7',
   createdAt: timestamp,
   updatedAt: timestamp
 }
@@ -103,23 +104,24 @@ npm run web
 {
   clientId: string,
   clientName: string,
-  branchId: 'sucursal1' | 'sucursal2',
+  branchId: 'h7-life-fit' | 'balanx-h7',
   timestamp: timestamp
 }
 ```
 
 ## 🏢 Sucursales
 
-Las sucursales están configuradas en `src/context/BranchContext.js`:
+La app está configurada para 2 gimnasios:
 
-```javascript
-const BRANCHES = [
-  { id: 'sucursal1', name: 'Sucursal Centro' },
-  { id: 'sucursal2', name: 'Sucursal Norte' },
-];
-```
+**H'7 Gym LIFE FIT**
+- 📍 Col. Fovissste, calle Barreta 1297, Linares, N.L.
+- Precios: Día $35 | Semana $150 | Quincena $250 | Mes $420
 
-Puedes cambiar los nombres según tus necesidades.
+**BalanX H7 Gym**
+- 📍 Col. San Gerardo La Petaca, Calle José San Martín #2074
+- Precios: Día $35 | Semana $130 | Quincena $240 | Mes $350
+
+Puedes cambiar los datos en `src/context/BranchContext.js`.
 
 ## 🔑 Login de Prueba
 
@@ -163,11 +165,15 @@ Modifica `MEMBERSHIP_TYPES` en `src/screens/AddClientScreen.js`:
 
 ```javascript
 const MEMBERSHIP_TYPES = [
-  { value: 'mensual', label: 'Mensual', months: 1 },
-  { value: 'trimestral', label: 'Trimestral', months: 3 },
+  { value: 'diaria', label: 'Día', days: 1 },
+  { value: 'semanal', label: 'Semana', days: 7 },
+  { value: 'quincenal', label: 'Quincena', days: 15 },
+  { value: 'mensual', label: 'Mes', days: 30 },
   // Agrega más aquí
 ];
 ```
+
+También actualiza los precios en `BranchContext.js` para cada sucursal.
 
 ## 🚧 TODOs (Futuras Mejoras)
 

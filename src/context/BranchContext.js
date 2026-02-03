@@ -12,8 +12,28 @@ export const useActiveBranch = () => {
 };
 
 const BRANCHES = [
-  { id: 'sucursal1', name: 'Sucursal Centro' },
-  { id: 'sucursal2', name: 'Sucursal Norte' },
+  { 
+    id: 'h7-life-fit',
+    name: "H'7 Gym LIFE FIT",
+    address: 'Col. Fovissste, calle Barreta 1297, Linares, N.L.',
+    prices: {
+      diaria: 35,
+      semanal: 150,
+      quincenal: 250,
+      mensual: 420
+    }
+  },
+  { 
+    id: 'balanx-h7',
+    name: 'BalanX H7 Gym',
+    address: 'Col. San Gerardo La Petaca, Calle José San Martín #2074',
+    prices: {
+      diaria: 35,
+      semanal: 130,
+      quincenal: 240,
+      mensual: 350
+    }
+  },
 ];
 
 export const BranchProvider = ({ children }) => {

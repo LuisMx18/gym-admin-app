@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Card, Text, Button, Chip, Divider, TextInput } from 'react-native-paper';
 import { updateClient } from '../services/clientService';
 import { getMembershipStatus, formatDate } from '../utils/membershipStatus';
-import { addMonths, format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
 export default function ClientDetailScreen({ route, navigation }) {
   const { client } = route.params;
@@ -34,15 +34,27 @@ export default function ClientDetailScreen({ route, navigation }) {
   };
 
   const handleRenew = () => {
+    // Determinar días según el tipo de membresía
+    const daysMap = {
+      diaria: 1,
+      semanal: 7,
+      quincenal: 15,
+      mensual: 30
+    };
+    const days = daysMap[client.membershipType] || 30;
+    const planName = client.membershipType === 'diaria' ? 'día' : 
+                     client.membershipType === 'semanal' ? 'semana' : 
+                     client.membershipType === 'quincenal' ? 'quincena' : 'mes';
+
     Alert.alert(
       'Renovar Membresía',
-      '¿Deseas renovar la membresía por 1 mes?',
+      `¿Deseas renovar la membresía por 1 ${planName}?`,
       [
         { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Renovar',
           onPress: async () => {
-            const newEnd = addMonths(new Date(), 1);
+            const newEnd = addDays(new Date(), days);
             setLoading(true);
             const result = await updateClient(client.id, {
               membershipStart: format(new Date(), 'yyyy-MM-dd'),

@@ -55,7 +55,7 @@ export default function DashboardScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerLeft}>
           <Text variant="headlineSmall">Dashboard</Text>
           <Menu
             visible={menuVisible}
@@ -82,6 +82,9 @@ export default function DashboardScreen({ navigation }) {
               />
             ))}
           </Menu>
+          <Text variant="bodySmall" style={styles.addressText}>
+            📍 {activeBranch.address}
+          </Text>
         </View>
         <Button mode="text" onPress={handleLogout} icon="logout">
           Salir
@@ -174,11 +177,18 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     padding: 16,
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  addressText: {
+    color: '#666',
+    marginTop: 4,
   },
   content: {
     flex: 1,
