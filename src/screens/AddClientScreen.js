@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
-import { TextInput, Button, SegmentedButtons, Text } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { TextInput, Button, Text, Card } from 'react-native-paper';
 import { useActiveBranch } from '../context/BranchContext';
 import { addClient } from '../services/clientService';
 import { addDays, format } from 'date-fns';
@@ -90,16 +90,35 @@ export default function AddClientScreen({ navigation }) {
         />
 
         <Text variant="titleMedium" style={styles.sectionTitle}>Tipo de Membresía</Text>
-        <SegmentedButtons
-          value={formData.membershipType}
-          onValueChange={(value) => setFormData({ ...formData, membershipType: value })}
-          buttons={MEMBERSHIP_TYPES.map(type => ({
-            value: type.value,
-            label: type.label,
-          }))}
-          style={styles.segmented}
-          disabled={loading}
-        />
+        <View style={styles.membershipButtons}>
+          {MEMBERSHIP_TYPES.map((type) => (
+            <TouchableOpacity
+              key={type.value}
+              onPress={() => setFormData({ ...formData, membershipType: type.value })}
+              disabled={loading}
+              style={styles.membershipButtonWrapper}
+            >
+              <Card
+                style={[
+                  styles.membershipButton,
+                  formData.membershipType === type.value && styles.membershipButtonActive
+                ]}
+              >
+                <Card.Content style={styles.membershipButtonContent}>
+                  <Text
+                    variant="labelLarge"
+                    style={[
+                      styles.membershipButtonText,
+                      formData.membershipType === type.value && styles.membershipButtonTextActive
+                    ]}
+                  >
+                    {type.label}
+                  </Text>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         <View style={styles.priceCard}>
           <Text variant="titleLarge" style={styles.priceText}>
@@ -139,8 +158,30 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 8,
   },
-  segmented: {
+  membershipButtons: {
+    flexDirection: 'row',
+    gap: 8,
     marginBottom: 16,
+  },
+  membershipButtonWrapper: {
+    flex: 1,
+  },
+  membershipButton: {
+    backgroundColor: '#f5f5f5',
+  },
+  membershipButtonActive: {
+    backgroundColor: '#6750a4',
+  },
+  membershipButtonContent: {
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  membershipButtonText: {
+    color: '#666',
+  },
+  membershipButtonTextActive: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   priceCard: {
     backgroundColor: '#e3f2fd',
